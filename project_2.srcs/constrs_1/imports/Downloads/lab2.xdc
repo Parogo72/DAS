@@ -51,6 +51,6 @@ set_property -dict { PACKAGE_PIN L1  IOSTANDARD LVCMOS33 } [get_ports {leds[15]}
 #
 set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports startStop];   # btnL
 set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports lap];         # btnC
-set_property -dict { PACKAGE_PIN T18 IOSTANDARD LVCMOS33 } [get_ports clear];       # btnU
-
+set_property -dict { PACKAGE_PIN T18 IOSTANDARD LVCMOS33 } [get_ports rst];         # btnU
+set_property -dict { PACKAGE_PIN U17 IOSTANDARD LVCMOS33 } [get_ports clear];       # btnD
 
