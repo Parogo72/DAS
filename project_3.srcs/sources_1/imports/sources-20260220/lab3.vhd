@@ -4,13 +4,13 @@
 --    lab3.vhd  12/09/2023
 --
 --    (c) J.M. Mendias
---    Diseño Automático de Sistemas
---    Facultad de Informática. Universidad Complutense de Madrid
+--    DiseÃ±o AutomÃ¡tico de Sistemas
+--    Facultad de InformÃ¡tica. Universidad Complutense de Madrid
 --
---  Propósito:
+--  PropÃ³sito:
 --    Laboratorio 3
 --
---  Notas de diseño:
+--  Notas de diseÃ±o:
 --
 ---------------------------------------------------------------------
 
@@ -125,7 +125,7 @@ architecture syn of lab3 is
   signal credit : unsigned(3 downto 0) := (others => '0');
   signal reel   : reelType             := (others => (others => '0'));
 
-  -- Señales 
+  -- SeÃ±ales 
   signal clk, rdy : std_logic;
   signal rstSync, rstAux  : std_logic;
   signal coinSync, coinDeb, coinRise : std_logic;
@@ -289,10 +289,11 @@ begin
   end process; 
   
   segsSignal:
-  segsBin <= std_logic_vector(credit) & std_logic_vector(reel(0)) & std_logic_vector(reel(1)) & std_logic_vector(reel(2));
+  segsBin <= std_logic_vector(credit) & std_logic_vector(reel(2)) & std_logic_vector(reel(1)) & std_logic_vector(reel(0));
   
   displayInterface : segsBankRefresher
     generic map ( FREQ_KHZ => OSC_KHZ, SIZE => 4 )
     port map (clk => osc, ens => "1111", bins=> segsBin, dps => "1000", an_n => an_n, segs_n => segs_n);
 
 end syn;
+
