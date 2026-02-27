@@ -4,13 +4,13 @@
 --    lab3.vhd  12/09/2023
 --
 --    (c) J.M. Mendias
---    Diseño Automático de Sistemas
---    Facultad de Informática. Universidad Complutense de Madrid
+--    DiseÃ±o AutomÃ¡tico de Sistemas
+--    Facultad de InformÃ¡tica. Universidad Complutense de Madrid
 --
---  Propósito:
+--  PropÃ³sito:
 --    Laboratorio 3
 --
---  Notas de diseño:
+--  Notas de diseÃ±o:
 --
 ---------------------------------------------------------------------
 
@@ -125,14 +125,14 @@ architecture syn of lab3 is
   signal credit : unsigned(3 downto 0) := (others => '0');
   signal reel   : reelType             := (others => (others => '0'));
 
-  -- Señales 
+  -- SeÃ±ales 
   signal clk, rdy : std_logic;
   signal rstSync, rstAux  : std_logic;
   signal coinSync, coinDeb, coinRise : std_logic;
   signal goSync, goDeb, goRise       : std_logic;
 
   signal spin : std_logic_vector(2 downto 0);
-  signal decCredit, incCredit, hasCredit : std_logic;
+  signal decCredit, incCredit, hasCredit, twoEqual, threeEqual : std_logic;
   signal cycleCntTC : std_logic;  
   
   signal segsBin : std_logic_vector(15 downto 0);
@@ -189,6 +189,9 @@ begin
     spin      <= (others => '0');
     case state is
       when initial =>
+        if goRise = '1' and hasCredit = '1' then
+          decCredit <= '1';
+        end if;
         spin      <= (others => '0');
       when S1 => 
         spin      <= (others => '1');
@@ -197,6 +200,7 @@ begin
       when S3 => 
         spin      <= "001";
       when reward => 
+        incCredit <= '1';
         spin      <= (others => '0');
     end case;
     if rstSync='1' then
@@ -205,7 +209,6 @@ begin
       case state is
         when initial =>
           if goRise = '1' and hasCredit = '1' then
-            decCredit <= '1';
             state := S1;
           end if;
         when S1 =>
@@ -221,7 +224,6 @@ begin
             state := reward;
           end if;
         when reward =>
-          incCredit <= '1';
           state := initial;
       end case;
     end if;
@@ -267,6 +269,8 @@ begin
  
   creditComparator: 
   hasCredit <= '1' when credit > 0 else '0';
+  twoEqual <= '1' when reel(0) = reel(1) or reel(0) = reel(2) or reel(1) = reel(2) else '0';
+  threeEqual <= '1' when reel(0) = reel(1) and reel(1) = reel(2) else '0';
   
   creditRegister :
   process (rstSync, clk)
@@ -279,9 +283,9 @@ begin
       elsif decCredit='1' then
         credit <= credit - 1;
       elsif incCredit='1' then
-        if reel(0) = reel(1) and reel(1) = reel(2) then
+        if threeEqual = '1' then
             credit <= credit + 3;
-        elsif reel(0) = reel(1) or reel(0) = reel(2) or reel(1) = reel(2) then
+        elsif twoEqual = '1' then
             credit <= credit + 2;
         end if;
       end if;
